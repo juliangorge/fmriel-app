@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -16,12 +15,14 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     sourceSets {
-        
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
+            implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.2")
+            implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -69,6 +70,9 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+        implementation("io.coil-kt:coil-compose:1.4.0")
+        implementation("androidx.navigation:navigation-compose:2.7.7")
+        implementation("androidx.compose.material:material:1.6.8")
     }
 }
 
