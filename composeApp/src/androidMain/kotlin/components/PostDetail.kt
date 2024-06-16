@@ -69,6 +69,6 @@ fun HTMLContent(htmlContent: String) {
         },
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp) // Ajusta la altura según sea necesario
+            .fillMaxSize()
     )
 }

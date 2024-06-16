@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import org.juliangorge.fmriel.R
 import screens.MainScreen
 import screens.PostDetailScreen
@@ -33,10 +34,9 @@ fun App(mainViewModel: MainViewModel = viewModel()) {
     MaterialTheme {
         val navController = rememberNavController()
         val scaffoldState = rememberScaffoldState()
-        var showMenu by remember { mutableStateOf(false) }
+        val coroutineScope = rememberCoroutineScope()
 
-        Scaffold(
-            scaffoldState = scaffoldState,
+        Scaffold(scaffoldState = scaffoldState,
             topBar = {
                 TopAppBar(
                     title = {
@@ -46,17 +46,21 @@ fun App(mainViewModel: MainViewModel = viewModel()) {
                                 .fillMaxWidth()
                                 .clickable { navController.navigate("main") },
                         ) {
-                            IconButton(onClick = { showMenu = !showMenu }) {
+                            IconButton(onClick = {
+                                coroutineScope.launch {
+                                    scaffoldState.drawerState.open()
+                                }
+                            }) {
                                 Icon(Icons.Default.Menu, contentDescription = "Menu")
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             Image(
-                                painter = painterResource(id = R.drawable.ic_launcher_background), // Asegúrate de tener tu logo en los recursos drawables
+                                painter = painterResource(id = R.drawable.ic_launcher_background),
                                 contentDescription = "Logo",
                                 modifier = Modifier.size(40.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("App Title", fontSize = 20.sp, color = Color.Black)
+                            Text("FM Riel", fontSize = 20.sp, color = Color.Black)
                         }
                     },
                     backgroundColor = Color.White,
@@ -64,10 +68,9 @@ fun App(mainViewModel: MainViewModel = viewModel()) {
                 )
             },
             drawerContent = {
-                if (showMenu) {
-                    DrawerContent(navController)
-                }
+                DrawerContent(navController)
             }
+
         ) { paddingValues ->
             NavHost(navController, startDestination = "main", modifier = Modifier.padding(paddingValues)) {
                 composable("main") { MainScreen(navController, mainViewModel) }
@@ -87,8 +90,14 @@ fun DrawerContent(navController: NavHostController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Menu Item 1", modifier = Modifier.padding(8.dp))
-        Text("Menu Item 2", modifier = Modifier.padding(8.dp))
-        // Agrega más elementos de menú aquí
+        Text("Menu Item 1", modifier = Modifier.padding(8.dp).clickable {
+            // Handle menu item click
+            navController.navigate("main")
+        })
+        Text("Menu Item 2", modifier = Modifier.padding(8.dp).clickable {
+            // Handle menu item click
+            navController.navigate("main")
+        })
+        // Add more menu items here
     }
 }

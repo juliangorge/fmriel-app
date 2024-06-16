@@ -8,9 +8,20 @@ class PostDetailViewModel : ViewModel() {
     private val _post = MutableStateFlow<Post?>(null)
     val post: StateFlow<Post?> get() = _post
 
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> get() = _loading
+
     fun getPostById(postId: String) {
+        _loading.value = true
         viewModelScope.launch {
-            PostComponent().getPostById(postId).let { _post.value = it }
+            try {
+                val fetchedPost = PostComponent().getPostById(postId)
+                _post.value = fetchedPost
+            } catch (e: Exception) {
+                // Handle error if needed
+            } finally {
+                _loading.value = false
+            }
         }
     }
 }
